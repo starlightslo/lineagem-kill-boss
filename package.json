@@ -1,0 +1,18 @@
+{
+  "name": "lineagem-kill-boss",
+  "version": "1.0.0",
+  "description": "LineageM KillBoss DC Bot",
+  "main": "index.js",
+  "scripts": {
+    "start": "env TZ='Asia/Tokyo' node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tony Huang",
+  "license": "ISC",
+  "dependencies": {
+    "discord.io": "github:izy521/discord.io",
+    "dotenv": "^16.0.0",
+    "moment": "^2.29.1",
+    "node-schedule": "^2.0.0"
+  }
+}

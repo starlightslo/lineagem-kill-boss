@@ -1,0 +1,184 @@
+[
+    {
+        "name": "03.巨大守護アリ",
+        "keys": ["3","03","蟻","アリ","螞蟻"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 3.5
+    },
+    {
+        "name": "06.リカント　　",
+        "keys": ["6","06","リカ","リカント","狼王"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 8
+    },
+    {
+        "name": "08.緑シャスキー",
+        "keys": ["緑シャス","8","08","緑","綠王", "綠"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 2
+    },
+    {
+        "name": "09.赤シャスキー",
+        "keys": ["9","赤シャス","紅王", "赤"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 2
+    },
+    {
+        "name": "10.巨大ワーム　",
+        "keys": ["10","ワーム","海蟲"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 2
+    },
+    {
+        "name": "12.スピリッド　",
+        "keys": ["12","スピリット","スピ","樹精"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 3
+    },
+    {
+        "name": "14.ガースト　　",
+        "keys": ["14","ガースト","卡王"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 7.5
+    },
+    {
+        "name": "27.巨大クロコ　",
+        "keys": ["27","クロコ","鰐","ワニ","惡魚", "鱷魚"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 3
+    },
+    {
+        "name": "28.デスナイト　",
+        "keys": ["28","デスナイト","DK","死騎"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 9
+    },
+    {
+        "name": "37.山賊の親分　",
+        "keys": ["37","親分", "強盜", "強盜王", "強胖"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 3
+    },
+    {
+        "name": "49.イフリート　",
+        "keys": ["49","if","いふ", "イフ", "EF"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 2
+    },
+    {
+        "name": "49.フェニックス",
+        "keys": ["火鳥","ふぇに","フェニ","不死鳥"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 8
+    },
+    {
+        "name": "51.中ドレイク　",
+        "keys": ["51","中","中ドレ"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 3
+    },
+    {
+        "name": "53.東ドレイク　",
+        "keys": ["53","東","東ドレ"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 3
+    },
+    {
+        "name": "54.闇ハイエル　",
+        "keys": ["闇エル","ハイエル","黑老", "大黑老"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 3
+    },
+    {
+        "name": "54.西下ドレイク",
+        "keys": ["左ドレ","左","西下","下","西下ドレ"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 2
+    },
+    {
+        "name": "54.西上ドレイク",
+        "keys": ["右ドレ","右","西上","上","西下ドレ"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 2
+    },
+    {
+        "name": "55.疾風ドレイク",
+        "keys": ["55","パパドレ","疾風","ぱぱ","パパ","GD", "巨飛"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 3
+    },
+    {
+        "name": "60.青デーモン　",
+        "keys": ["60","デーモン","閣下","青閣下","藍惡魔"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 6
+    },
+    {
+        "name": "66.ドッペルボス",
+        "keys": ["66","ドペ","ドッペ","變王"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 7
+    },
+    {
+        "name": "68.大足のマーヨ",
+        "keys": ["68","マヨ","マーヨ","雪男","大腳"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 3
+    },
+    {
+        "name": "71.アルフィア",
+        "keys": ["71","蜘蛛","アルフィア"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 4
+    },
+    {
+        "name": "74.カスパ四賢者",
+        "keys": ["74","カスパ","四色","賢者","四賢者"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 2
+    },
+    {
+        "name": "76.古代巨人　　",
+        "keys": ["76","ジャイアント","ジャイアン","巨人","AG","古巨"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 8.5
+    },
+    {
+        "name": "77.暗黒ハイエル",
+        "keys": ["77","暗黒"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 6
+    },
+    {
+        "name": "TI.カーツ　　　",
+        "keys": ["TI","カツ","カツオ","カーツ","克特"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 10
+    }
+]

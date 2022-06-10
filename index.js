@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const Discord = require('discord.io');
 const BOSS_DATA = require('./boss.json');
+const SPECIAL_BOSS_DATA = require('./special-boss.json');
 const schedule = require('node-schedule');
 const moment = require('moment');
 const fs = require('fs');
@@ -215,8 +216,8 @@ const clearBoss = (bossName) => {
     let message = '';
     bossList.forEach((boss) => {
         if (
-            boss.name.toLowerCase() == bossName
-            || boss.keys.find((key) => key.toLowerCase() == bossName) !== undefined
+            boss.name.toLowerCase() == bossName.toLowerCase()
+            || boss.keys.find((key) => key.toLowerCase() == bossName.toLowerCase()) !== undefined
         ) {
             boss.time = null;
             boss.memo = '';
@@ -274,9 +275,26 @@ const updateChannelTempFile = () => {
 // Define scheduler
 schedule.scheduleJob('0 */1 * * * *', function () {
     const now = moment();
+    // Check normal boss
     bossList.forEach((boss) => {
+        // Check is boss time
         if (boss.time !== null && now.diff(moment(boss.time, 'HH:mm:ss'), 'minutes') === (1 - NOTICE_TIME)) {
             bossNotice(boss);
         }
+
+        // Check is exceed boss time
+        // TODO
+    });
+
+    // Check special boss
+    SPECIAL_BOSS_DATA.forEach((boss) => {
+        boss.time.forEach((time) => {
+            if (now.diff(moment(time, 'HH:mm'), 'minutes') === (1 - NOTICE_TIME)) {
+                bossNotice({
+                    name: boss.name,
+                    time
+                });
+            }
+        })
     });
 });

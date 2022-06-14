@@ -7,6 +7,7 @@ const schedule = require('node-schedule');
 const moment = require('moment');
 const fs = require('fs');
 const NOTICE_TIME = 5;
+const LIMIT_TIMES = 3;
 const DC_NOTIFY = true;
 const BOSS_TEMP_FILE = 'boss.tmp';
 const CHANNEL_TEMP_FILE = 'channel.tmp';
@@ -19,6 +20,9 @@ const COMMANDS = {
     clear: 'CLEAR',
     kill: 'KILL'
 }
+const DATETIME_FORMAT = 'yyyy/MM/DD HH:mm:ss';
+const INPUT_TIME_FORMAT = 'HHmmss';
+const DISPLAY_TIME_FORMAT = 'HH:mm:ss';
 
 let bossList = JSON.parse(JSON.stringify(BOSS_DATA));
 let sourceChannelID = null;
@@ -96,7 +100,7 @@ bot.on('message', function (user, userID, channelID, message, event) {
     }
 
     if (arr[0].toUpperCase() === COMMANDS.clear) {
-        clearBoss(arr[1]);
+        clearBoss(arr[1], false);
         return;
     }
 });
@@ -154,7 +158,7 @@ const getBoss = () => {
                 latestBoss = JSON.parse(JSON.stringify(tempBossList[j]));
             }
 
-            const bossTime = moment(tempBossList[j].time, 'HH:mm:ss');
+            const bossTime = moment(tempBossList[j].time, DATETIME_FORMAT);
             if (!bossTime.isValid()) continue;
 
             const diffTime = bossTime.diff(moment(), 'minutes');
@@ -185,15 +189,15 @@ const clearAllBoss = (event) => {
 const killBoss = (bossName, time, memo) => {
     console.info('killBoss->bossName: ' + bossName + ', time: ' + time + ', memo: ' + memo);
     if (bossName === undefined) return;
-    if (time === undefined) time = moment().format('HHmmss');
+    if (time === undefined) time = moment().format(INPUT_TIME_FORMAT);
     if (isNaN(time)) {
         memo = time;
-        time = moment().format('HHmmss');
+        time = moment().format(INPUT_TIME_FORMAT);
     };
     if (time.length !== 4 && time.length !== 6) return;
 
     if (time.length === 4) time += '00';
-    const momentTime = moment(time, 'HHmmss');
+    const momentTime = moment(time, INPUT_TIME_FORMAT);
 
     let message = '';
     bossList.forEach((boss) => {
@@ -201,7 +205,7 @@ const killBoss = (bossName, time, memo) => {
             boss.name.toLowerCase() == bossName.toLowerCase()
             || boss.keys.find((key) => key.toLowerCase() == bossName.toLowerCase()) !== undefined
         ) {
-            boss.time = momentTime.add(boss.refreshTime, 'hour').format('HH:mm:ss')
+            boss.time = momentTime.add(boss.refreshTime, 'hour').format(DATETIME_FORMAT)
             boss.memo = (memo !== undefined ? memo : '');
             message = bossInfo(boss);
             return;
@@ -211,7 +215,7 @@ const killBoss = (bossName, time, memo) => {
     if (DC_NOTIFY) sendMessage(message);
 }
 
-const clearBoss = (bossName) => {
+const clearBoss = (bossName, auto) => {
     console.info('clearBoss->bossName: ' + bossName);
     let message = '';
     bossList.forEach((boss) => {
@@ -219,9 +223,15 @@ const clearBoss = (bossName) => {
             boss.name.toLowerCase() == bossName.toLowerCase()
             || boss.keys.find((key) => key.toLowerCase() == bossName.toLowerCase()) !== undefined
         ) {
-            boss.time = null;
-            boss.memo = '';
-            message = `クリア ${boss.name}`;
+            if (auto) {
+                boss.memo = 'Lost (' + moment(boss.time, DATETIME_FORMAT).format(DATETIME_FORMAT) + ')';
+                boss.time = null;
+                message = `【System】Lost ${boss.name}`;
+            } else {
+                boss.time = null;
+                boss.memo = '';
+                message = `クリア ${boss.name}`;
+            }
             return;
         }
     });
@@ -230,7 +240,7 @@ const clearBoss = (bossName) => {
 }
 
 const bossInfo = (boss) => {
-    let message = (boss.time !== null ? boss.time + ' \t ' : '- \t\t\t\t\t ') + boss.name;
+    let message = (boss.time !== null ? transformToDisplayTime(boss.time) + ' \t ' : '- \t\t\t\t\t ') + boss.name;
     if (boss.memo !== null && boss.memo.length > 0) {
         message += (' \t\t ' + boss.memo);
     }
@@ -252,8 +262,12 @@ const sendMessage = (message) => {
 
 const bossNotice = (boss) => {
     console.info('bossNotice->boss: ' + boss);
-    var message = `@here 【通知】${boss.name} ${boss.time} に出現する`;
+    const message = `@here 【通知】${boss.name} ${transformToDisplayTime(boss.time)} ${((boss.memo != null && boss.memo.length > 0) ? '【' + boss.memo + '】' : '')} に出現する`;
     sendMessage(message);
+}
+
+const transformToDisplayTime = (time) => {
+    return moment(time, DATETIME_FORMAT).format(DISPLAY_TIME_FORMAT);
 }
 
 const updateBossTempFile = () => {
@@ -278,18 +292,25 @@ schedule.scheduleJob('0 */1 * * * *', function () {
     // Check normal boss
     bossList.forEach((boss) => {
         // Check is boss time
-        if (boss.time !== null && now.diff(moment(boss.time, 'HH:mm:ss'), 'minutes') === (1 - NOTICE_TIME)) {
+        if (boss.time !== null && now.diff(moment(boss.time, DATETIME_FORMAT), 'minutes') === (1 - NOTICE_TIME)) {
             bossNotice(boss);
         }
 
         // Check is exceed boss time
-        // TODO
+        if (boss.time !== null) {
+            const diffHours = now.diff(moment(boss.time, DATETIME_FORMAT), 'hours');
+            if (diffHours >= boss.refreshTime * LIMIT_TIMES) {
+                console.info(boss.name + ' diff hour more than (' + LIMIT_TIMES + ') times: ' + diffHours);
+                clearBoss(boss.keys[0], true);
+            }
+        }
     });
 
     // Check special boss
     SPECIAL_BOSS_DATA.forEach((boss) => {
         boss.time.forEach((time) => {
-            if (now.diff(moment(time, 'HH:mm'), 'minutes') === (1 - NOTICE_TIME)) {
+            if (now.diff(moment(time, 'HH:mm'), 'minutes') === (1 - NOTICE_TIME)
+                && boss.weeks.indexOf(now.week()) > -1) {
                 bossNotice({
                     name: boss.name,
                     time

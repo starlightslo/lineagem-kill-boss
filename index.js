@@ -194,7 +194,7 @@ const killBoss = (bossName, time, memo) => {
         memo = time;
         time = moment().format(INPUT_TIME_FORMAT);
     };
-    if (time.length !== 4 && time.length !== 6) return;
+    if (time.length !== 4 && time.length !== 6 && time != '99') return;
 
     if (time.length === 4) time += '00';
     const momentTime = moment(time, INPUT_TIME_FORMAT);
@@ -205,8 +205,22 @@ const killBoss = (bossName, time, memo) => {
             boss.name.toLowerCase() == bossName.toLowerCase()
             || boss.keys.find((key) => key.toLowerCase() == bossName.toLowerCase()) !== undefined
         ) {
-            boss.time = momentTime.add(boss.refreshTime, 'hour').format(DATETIME_FORMAT)
-            boss.memo = (memo !== undefined ? memo : '');
+            if (time == 99) {
+                boss.time = moment(boss.time, DATETIME_FORMAT).add(boss.refreshTime, 'hour').format(DATETIME_FORMAT);
+                let lastMemoChar = '';
+                if (boss.memo.substring(0, 3) == 'スルー') {
+                    lastMemoChar = boss.memo.slice(-1);
+                    if (!isNaN(lastMemoChar)) {
+                        lastMemoChar = Number(lastMemoChar) + 1;
+                    } else {
+                        lastMemoChar = '2';
+                    }
+                }
+                boss.memo = 'スルー' + lastMemoChar;
+            } else {
+                boss.time = momentTime.add(boss.refreshTime, 'hour').format(DATETIME_FORMAT)
+                boss.memo = (memo !== undefined ? memo : '');
+            }
             message = bossInfo(boss);
             return;
         }

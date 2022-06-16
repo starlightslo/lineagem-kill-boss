@@ -324,7 +324,7 @@ schedule.scheduleJob('0 */1 * * * *', function () {
     SPECIAL_BOSS_DATA.forEach((boss) => {
         boss.time.forEach((time) => {
             if (now.diff(moment(time, 'HH:mm'), 'minutes') === (1 - NOTICE_TIME)
-                && boss.weeks.indexOf(now.week()) > -1) {
+                && boss.weeks.indexOf(now.weekday()) > -1) {
                 bossNotice({
                     name: boss.name,
                     time

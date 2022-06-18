@@ -281,7 +281,11 @@ const bossNotice = (boss) => {
 }
 
 const transformToDisplayTime = (time) => {
-    return moment(time, DATETIME_FORMAT).format(DISPLAY_TIME_FORMAT);
+    const momentDate = moment(time, DATETIME_FORMAT);
+    if (momentDate.isValid()) {
+        return momentDate.format(DISPLAY_TIME_FORMAT);
+    }
+    return time;
 }
 
 const updateBossTempFile = () => {

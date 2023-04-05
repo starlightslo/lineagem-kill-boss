@@ -36,7 +36,7 @@
     },
     {
         "name": "12.スピリッド　",
-        "keys": ["12","スピリット","スピ","樹精","ts"],
+        "keys": ["スピリッド","スピ","樹精","ts"],
         "time": null,
         "memo": "",
         "refreshTime": 3
@@ -187,5 +187,19 @@
         "time": null,
         "memo": "",
         "refreshTime": 10
+    },
+    {
+        "name": "12.オルクス　　",
+        "keys": ["12","オルクス","Orcus","OR","オル","烏勒庫斯"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 6
+    },
+    {
+        "name": "56.ネクロス　　",
+        "keys": ["56","ネクロス","ネク","NECROS","NE","奈克諾斯"],
+        "time": null,
+        "memo": "",
+        "refreshTime": 4
     }
 ]

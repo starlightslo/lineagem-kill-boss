@@ -24,14 +24,51 @@ const DATETIME_FORMAT = 'yyyy/MM/DD HH:mm:ss';
 const INPUT_TIME_FORMAT = 'HHmmss';
 const DISPLAY_TIME_FORMAT = 'HH:mm:ss';
 
+const BOSS_LIST = JSON.parse(JSON.stringify(BOSS_DATA));
 let bossList = JSON.parse(JSON.stringify(BOSS_DATA));
 let sourceChannelID = null;
+
+const updateBossTempFile = () => {
+    try {
+        fs.writeFileSync(BOSS_TEMP_FILE, JSON.stringify(bossList));
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+const updateChannelTempFile = () => {
+    try {
+        fs.writeFileSync(CHANNEL_TEMP_FILE, sourceChannelID);
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+const refreshBossList = () => {
+    BOSS_LIST.forEach((originalBoss) => {
+        let newBoss = true;
+        bossList.forEach((boss) => {
+            if (boss.name == originalBoss.name) {
+                newBoss = false;
+                boss.keys = originalBoss.keys;
+                boss.refreshTime = originalBoss.refreshTime;
+            }
+        });
+
+        if (newBoss) {
+            bossList.push(originalBoss);
+        }
+    });
+
+    updateBossTempFile();
+}
 
 // Check is there boss.tmp file
 try {
     if (fs.existsSync(BOSS_TEMP_FILE)) {
         // Loading boss from boss.tmp
         bossList = JSON.parse(fs.readFileSync(BOSS_TEMP_FILE, 'utf8'));
+        refreshBossList();
     }
 } catch (err) {
     console.error(err)
@@ -286,22 +323,6 @@ const transformToDisplayTime = (time) => {
         return momentDate.format(DISPLAY_TIME_FORMAT);
     }
     return time;
-}
-
-const updateBossTempFile = () => {
-    try {
-        fs.writeFileSync(BOSS_TEMP_FILE, JSON.stringify(bossList));
-    } catch (err) {
-        console.error(err);
-    }
-}
-
-const updateChannelTempFile = () => {
-    try {
-        fs.writeFileSync(CHANNEL_TEMP_FILE, sourceChannelID);
-    } catch (err) {
-        console.error(err);
-    }
 }
 
 // Define scheduler

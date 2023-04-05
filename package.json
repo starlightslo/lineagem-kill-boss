@@ -1,6 +1,6 @@
 {
   "name": "lineagem-kill-boss",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "LineageM KillBoss DC Bot",
   "main": "index.js",
   "scripts": {

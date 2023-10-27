@@ -11,6 +11,8 @@ const LIMIT_TIMES = 3;
 const DC_NOTIFY = true;
 const BOSS_TEMP_FILE = 'boss.tmp';
 const CHANNEL_TEMP_FILE = 'channel.tmp';
+const NOTIFY_USER_FILE = 'notify-user.json';
+const NOTIFY_USER_DATA = require('./' + NOTIFY_USER_FILE);
 const COMMANDS = {
     init: 'INIT',
     help: 'HELP',
@@ -18,7 +20,9 @@ const COMMANDS = {
     boss: 'BOSS',
     clearall: 'CLEARALL',
     clear: 'CLEAR',
-    kill: 'KILL'
+    kill: 'KILL',
+    notify: 'NOTIFY',
+    unnotify: 'UNNOTIFY'
 }
 const DATETIME_FORMAT = 'yyyy/MM/DD HH:mm:ss';
 const INPUT_TIME_FORMAT = 'HHmmss';
@@ -26,11 +30,20 @@ const DISPLAY_TIME_FORMAT = 'HH:mm:ss';
 
 const BOSS_LIST = JSON.parse(JSON.stringify(BOSS_DATA));
 let bossList = JSON.parse(JSON.stringify(BOSS_DATA));
+let notifyUserList = JSON.parse(JSON.stringify(NOTIFY_USER_DATA));
 let sourceChannelID = null;
 
 const updateBossTempFile = () => {
     try {
         fs.writeFileSync(BOSS_TEMP_FILE, JSON.stringify(bossList));
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+const updateNotifyUser = () => {
+    try {
+        fs.writeFileSync(NOTIFY_USER_FILE, JSON.stringify(notifyUserList));
     } catch (err) {
         console.error(err);
     }
@@ -140,6 +153,16 @@ bot.on('message', function (user, userID, channelID, message, event) {
         clearBoss(arr[1], false);
         return;
     }
+
+    if (arr[0].toUpperCase() === COMMANDS.notify) {
+        notify(userID);
+        return;
+    }
+
+    if (arr[0].toUpperCase() === COMMANDS.unnotify) {
+        unNotify(userID);
+        return;
+    }
 });
 
 const initBot = () => {
@@ -176,6 +199,14 @@ const helpBoss = (event) => {
     message += "命令： clearall \r\n";
     message += "説明： \r\n";
     message += "すべてのボス時間をクリアする。 \r\n\r\n";
+
+    message += "命令： notify \r\n";
+    message += "説明： \r\n";
+    message += "通知追加。 \r\n\r\n";
+
+    message += "命令： unnotify \r\n";
+    message += "説明： \r\n";
+    message += "通知をキャンセルする。 \r\n\r\n";
 
     if (DC_NOTIFY) sendMessage(message);
 }
@@ -313,7 +344,28 @@ const sendMessage = (message) => {
 
 const bossNotice = (boss) => {
     console.info('bossNotice->boss: ' + boss);
-    const message = `@here 【通知】${boss.name} ${transformToDisplayTime(boss.time)} ${((boss.memo != null && boss.memo.length > 0) ? '【' + boss.memo + '】' : '')} に出現する`;
+    let message = `【通知】${boss.name} ${transformToDisplayTime(boss.time)} ${((boss.memo != null && boss.memo.length > 0) ? '【' + boss.memo + '】' : '')} に出現する`;
+    notifyUserList.forEach((notifyUser) => {
+        message += ` <@${notifyUser}> `
+    });
+    sendMessage(message);
+}
+
+const notify = (userID) => {
+    console.info('Notify user: ' + userID);
+    if (notifyUserList.indexOf(userID) < 0) {
+        notifyUserList.push(userID);
+        updateNotifyUser();
+    }
+    const message = `【通知追加】: <@${userID}>`;
+    sendMessage(message);
+}
+
+const unNotify = (userID) => {
+    console.info('Unnotify user: ' + userID);
+    notifyUserList = notifyUserList.filter(e => e !== userID);
+    const message = `【通知キャンセル】: <@${userID}>`;
+    updateNotifyUser();
     sendMessage(message);
 }
 

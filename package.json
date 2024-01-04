@@ -1,5 +1,4 @@
 {
-  "type": "commonjs",
   "name": "lineagem-kill-boss",
   "version": "2.0.0",
   "description": "LineageM KillBoss DC Bot",
@@ -11,7 +10,6 @@
   "author": "Tony Huang",
   "license": "ISC",
   "dependencies": {
-    "discord.io": "github:izy521/discord.io",
     "discord.js": "^14.14.1",
     "dotenv": "^16.0.0",
     "moment": "^2.29.1",
